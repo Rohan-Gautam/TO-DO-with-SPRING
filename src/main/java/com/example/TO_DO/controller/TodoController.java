@@ -1,6 +1,7 @@
 package com.example.TO_DO.controller;
 
-import com.example.TO_DO.model.Todo;
+import com.example.TO_DO.dto.TodoRequest;
+import com.example.TO_DO.dto.TodoResponse;
 import com.example.TO_DO.service.TodoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,26 +21,26 @@ public class TodoController {
 
     //get all todos using http GET
     @GetMapping
-    public ResponseEntity<List<Todo>> getAllTodos() {
+    public ResponseEntity<List<TodoResponse>> getAllTodos() {
         return ResponseEntity.ok(todoService.getAllTodos());
     }
 
     //get a todos using id with http GET
     @GetMapping("/{id}")
-    public ResponseEntity<Todo> getById(@PathVariable Long id) {
+    public ResponseEntity<TodoResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(todoService.getTodoById(id));
     }
 
     //create new todos using http POST
     @PostMapping
-    public ResponseEntity<Todo> createTodo(@RequestBody Todo todo){
-        return ResponseEntity.status(HttpStatus.CREATED).body(todoService.createTodo(todo));
+    public ResponseEntity<TodoResponse> createTodo(@RequestBody TodoRequest request){
+        return ResponseEntity.status(HttpStatus.CREATED).body(todoService.createTodo(request));
     }
 
     //update a todos using http PUT
     @PutMapping("/{id}")
-    public ResponseEntity<Todo> updateTodo(@PathVariable Long id, @RequestBody Todo todo) {
-        return ResponseEntity.ok(todoService.updateTodo(id, todo));
+    public ResponseEntity<TodoResponse> updateTodo(@PathVariable Long id, @RequestBody TodoRequest request) {
+        return ResponseEntity.ok(todoService.updateTodo(id, request));
     }
 
     //delete a todos using http DELETE
