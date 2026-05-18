@@ -6,5 +6,5 @@ import lombok.Data;
 public class TodoRequest {
     private String title;
     private String description;
-    private boolean isCompleted;
+    private boolean completed;
 }

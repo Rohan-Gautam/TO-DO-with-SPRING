@@ -2,9 +2,11 @@ package com.example.TO_DO.controller;
 
 import com.example.TO_DO.dto.TodoRequest;
 import com.example.TO_DO.dto.TodoResponse;
+import com.example.TO_DO.model.User;
 import com.example.TO_DO.service.TodoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,32 +23,32 @@ public class TodoController {
 
     //get all todos using http GET
     @GetMapping
-    public ResponseEntity<List<TodoResponse>> getAllTodos() {
-        return ResponseEntity.ok(todoService.getAllTodos());
+    public ResponseEntity<List<TodoResponse>> getAllTodos(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(todoService.getAllTodos(user));
     }
 
     //get a todos using id with http GET
     @GetMapping("/{id}")
-    public ResponseEntity<TodoResponse> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(todoService.getTodoById(id));
+    public ResponseEntity<TodoResponse> getById(@PathVariable Long id, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(todoService.getTodoById(id, user));
     }
 
     //create new todos using http POST
     @PostMapping
-    public ResponseEntity<TodoResponse> createTodo(@RequestBody TodoRequest request){
-        return ResponseEntity.status(HttpStatus.CREATED).body(todoService.createTodo(request));
+    public ResponseEntity<TodoResponse> createTodo(@RequestBody TodoRequest request, @AuthenticationPrincipal User user){
+        return ResponseEntity.status(HttpStatus.CREATED).body(todoService.createTodo(request, user));
     }
 
     //update a todos using http PUT
     @PutMapping("/{id}")
-    public ResponseEntity<TodoResponse> updateTodo(@PathVariable Long id, @RequestBody TodoRequest request) {
-        return ResponseEntity.ok(todoService.updateTodo(id, request));
+    public ResponseEntity<TodoResponse> updateTodo(@PathVariable Long id, @RequestBody TodoRequest request, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(todoService.updateTodo(id, request, user));
     }
 
     //delete a todos using http DELETE
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTodo(@PathVariable Long id) {
-        todoService.deleteTodo(id);
+    public ResponseEntity<Void> deleteTodo(@PathVariable Long id, @AuthenticationPrincipal User user) {
+        todoService.deleteTodo(id, user);
         return ResponseEntity.noContent().build();
     }
 

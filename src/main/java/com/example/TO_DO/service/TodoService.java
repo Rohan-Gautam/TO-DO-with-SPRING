@@ -3,6 +3,7 @@ package com.example.TO_DO.service;
 import com.example.TO_DO.dto.TodoRequest;
 import com.example.TO_DO.dto.TodoResponse;
 import com.example.TO_DO.model.Todo;
+import com.example.TO_DO.model.User;
 import com.example.TO_DO.repository.TodoRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,28 +20,32 @@ public class TodoService {
     }
 
     //get all todos
-    public List<TodoResponse> getAllTodos() {
+    public List<TodoResponse> getAllTodos(User user) {
 
-        return todoRepository.findAll().stream().map(this::convertToResponse).collect(Collectors.toList());
+        return todoRepository.findByUserId(user.getId())
+                             .stream()
+                             .map(this::convertToResponse)
+                             .collect(Collectors.toList());
     }
 
     //get a todo_by id
-    public TodoResponse getTodoById(Long id) {
-        Todo todo = todoRepository.findById(id)
+    public TodoResponse getTodoById(Long id, User user) {
+        Todo todo = todoRepository.findByIdAndUserId(id, user.getId())
                                       .orElseThrow(() -> new RuntimeException("Todo not found with id: " + id));
         return convertToResponse(todo);
     }
 
     //create new todos
-    public TodoResponse createTodo(TodoRequest request) {
+    public TodoResponse createTodo(TodoRequest request, User user) {
         Todo todo = convertToEntity(request);
+        todo.setUser(user);
         Todo saved = todoRepository.save(todo);
         return convertToResponse(saved);
     }
 
     //update todos
-    public TodoResponse updateTodo(Long id, TodoRequest request) {
-        Todo existing = todoRepository.findById(id)
+    public TodoResponse updateTodo(Long id, TodoRequest request, User user) {
+        Todo existing = todoRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(() -> new RuntimeException("Todo not found with id: " + id));
         existing.setTitle(request.getTitle());
         existing.setDescription(request.getDescription());
@@ -50,8 +55,8 @@ public class TodoService {
     }
 
     //delete todos
-    public void deleteTodo(Long id) {
-        Todo existing = todoRepository.findById(id)
+    public void deleteTodo(Long id, User user) {
+        Todo existing = todoRepository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(() -> new RuntimeException("Todo not found with id: " + id));
         todoRepository.deleteById(existing.getId());
     }
