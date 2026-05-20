@@ -4,6 +4,7 @@ import com.example.TO_DO.dto.TodoRequest;
 import com.example.TO_DO.dto.TodoResponse;
 import com.example.TO_DO.model.User;
 import com.example.TO_DO.service.TodoService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -35,13 +36,13 @@ public class TodoController {
 
     //create new todos using http POST
     @PostMapping
-    public ResponseEntity<TodoResponse> createTodo(@RequestBody TodoRequest request, @AuthenticationPrincipal User user){
+    public ResponseEntity<TodoResponse> createTodo(@Valid @RequestBody TodoRequest request, @AuthenticationPrincipal User user){
         return ResponseEntity.status(HttpStatus.CREATED).body(todoService.createTodo(request, user));
     }
 
     //update a todos using http PUT
     @PutMapping("/{id}")
-    public ResponseEntity<TodoResponse> updateTodo(@PathVariable Long id, @RequestBody TodoRequest request, @AuthenticationPrincipal User user) {
+    public ResponseEntity<TodoResponse> updateTodo(@PathVariable Long id,@Valid @RequestBody TodoRequest request, @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(todoService.updateTodo(id, request, user));
     }
 
