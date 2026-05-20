@@ -6,6 +6,7 @@ import com.example.TO_DO.dto.RegisterRequest;
 import com.example.TO_DO.model.User;
 import com.example.TO_DO.repository.UserRepository;
 import com.example.TO_DO.service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,7 +26,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
         String token = authService.register(request.getName(),
                                             request.getEmail(),
                                             request.getPassword());
